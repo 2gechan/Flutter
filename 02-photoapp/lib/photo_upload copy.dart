@@ -31,9 +31,6 @@ class ImageUploadState extends State<ImageUpload> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Center(child: Text("추억 보관함")),
-      ),
       persistentFooterButtons: [
         Row(
           children: [

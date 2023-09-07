@@ -2,6 +2,8 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 
+import 'main_drawer.dart';
+
 class PhotoApp extends StatelessWidget {
   const PhotoApp({super.key});
 
@@ -31,8 +33,9 @@ class ImageUploadState extends State<ImageUpload> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      drawer: mainDrawer(context),
       appBar: AppBar(
-        title: const Center(child: Text("추억 보관함")),
+        title: const Text("추억 보관함"),
       ),
       body: Container(
         padding: const EdgeInsets.all(10),
