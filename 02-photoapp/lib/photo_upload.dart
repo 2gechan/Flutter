@@ -1,6 +1,7 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 import 'main_drawer.dart';
 
@@ -67,6 +68,10 @@ class ImageUploadState extends State<ImageUpload> {
                       //카메라로 촬영하지 않고 뒤로가기 버튼을 누를 경우,
                       // null값이 저장되므로 if문을 통해 null이 아닐 경우에만 images변수로 저장하도록 합니다
                       if (image != null) {
+                        // FirebaseFirestore.instance
+                        //     .collection("images")
+                        //     .doc()
+                        //     .set(image);
                         setState(() {
                           images.add(image);
                         });

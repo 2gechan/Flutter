@@ -64,6 +64,11 @@ class _PhotoFolderState extends State<PhotoFolder> {
             padding: const EdgeInsets.all(40.0),
             child: GestureDetector(
               onTap: () {
+                Navigator.of(context).pushReplacement(
+                  MaterialPageRoute(
+                    builder: (context) => const PhotoApp(),
+                  ),
+                );
                 debugPrint("폴더 클릭");
               },
               child: Container(

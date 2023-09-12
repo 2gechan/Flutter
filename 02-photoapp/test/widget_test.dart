@@ -9,7 +9,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 import 'package:photoapp/main.dart';
-import 'package:photoapp/photo_upload%20copy.dart';
+import 'package:photoapp/upload_test.dart';
 
 void main() {
   testWidgets('Counter increments smoke test', (WidgetTester tester) async {

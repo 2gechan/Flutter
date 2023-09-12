@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:photoapp/main.dart';
 import 'package:photoapp/page/photo_folder.dart';
+import 'package:photoapp/page/photo_share_page.dart';
 
 Widget mainDrawer(BuildContext context) => Drawer(
       child: ListView(
@@ -26,10 +27,10 @@ Widget mainDrawer(BuildContext context) => Drawer(
               ));
             },
           ),
-          const Divider(
-            height: 0.2,
-            color: Colors.black,
-          ),
+          // const Divider(
+          //   height: 0.2,
+          //   color: Colors.black,
+          // ),
           ListTile(
             title: const Text(
               "내 추억 보관함",
@@ -48,9 +49,27 @@ Widget mainDrawer(BuildContext context) => Drawer(
                       ));
             },
           ),
-          const Divider(
-            height: 0.2,
-            color: Colors.black,
+          // const Divider(
+          //   height: 0.2,
+          //   color: Colors.black,
+          // ),
+          ListTile(
+            title: const Text(
+              "공유이미지",
+              style: TextStyle(
+                color: Colors.green,
+              ),
+            ),
+            leading: const Icon(
+              Icons.photo,
+              color: Colors.green,
+            ),
+            onTap: () {
+              Navigator.of(context).push(
+                  MaterialPageRoute(builder: (context) => const SharePage()
+                      // const PhotoApp(),
+                      ));
+            },
           ),
         ],
       ),

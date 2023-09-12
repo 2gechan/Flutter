@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "638786392033",
+    "project_id": "flutter-project-photoapp",
+    "storage_bucket": "flutter-project-photoapp.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:638786392033:android:25dedd19e2c62301c70ca0",
+        "android_client_info": {
+          "package_name": "com.gechan.photoapp"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBtjk1thezR9YVr4Oa-zO9SNF0_9xbitSQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
