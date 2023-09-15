@@ -1,14 +1,15 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:photoapp/main.dart';
 import 'package:photoapp/page/photo_folder.dart';
 import 'package:photoapp/page/photo_share_page.dart';
 
-Widget mainDrawer(BuildContext context) => Drawer(
+Widget mainDrawer(BuildContext context, {User? authUser}) => Drawer(
       child: ListView(
         children: [
-          const UserAccountsDrawerHeader(
-            accountName: Text("이름"),
-            accountEmail: Text("이메일"),
+          UserAccountsDrawerHeader(
+            accountName: const Text(""),
+            accountEmail: Text(authUser?.email ?? ""),
           ),
           ListTile(
             title: const Text(

@@ -56,7 +56,7 @@ class _StartPageState extends State<StartPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      drawer: mainDrawer(context),
+      drawer: mainDrawer(context, authUser: _authUser),
       appBar: AppBar(
         toolbarHeight: 80,
         title: const Text(
