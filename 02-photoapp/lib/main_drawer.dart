@@ -1,7 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:photoapp/main.dart';
-import 'package:photoapp/page/image_gallary.dart';
 import 'package:photoapp/page/photo_folder.dart';
 import 'package:photoapp/page/photo_share_page.dart';
 

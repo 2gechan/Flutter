@@ -28,16 +28,22 @@ class _SharePageState extends State<SharePage> {
       // Firestore에서 가져온 이미지 URL을 images 리스트에 추가합니다.
       for (QueryDocumentSnapshot doc in querySnapshot.docs) {
         String imageUrl = doc['image_url'] as String;
-        // Firebase Storage에서 이미지를 다운로드하고 로컬 파일로 저장합니다.
-        final ref = FirebaseStorage.instance.refFromURL(imageUrl);
-        // final Directory tempDir = await getTemporaryDirectory();
-        final File file = File(
-            '${(await getTemporaryDirectory()).path}/${doc['image_name']}');
-        await ref.writeToFile(file);
 
-        setState(() {
-          images.add(XFile(file.path));
-        });
+        // Firestore에 저장된 이미지 URL이 올바른 형식이 아닐 경우 처리
+        if (imageUrl.startsWith('gs://') || imageUrl.startsWith('http')) {
+          // Firebase Storage에서 이미지를 다운로드하고 로컬 파일로 저장합니다.
+          final ref = FirebaseStorage.instance.refFromURL(imageUrl);
+          final Directory tempDir = await getTemporaryDirectory();
+          final File file = File(
+              '${(await getTemporaryDirectory()).path}/${doc['image_name']}');
+          await ref.writeToFile(file);
+
+          setState(() {
+            images.add(XFile(file.path));
+          });
+        } else {
+          print('Invalid image URL: $imageUrl');
+        }
       }
     } catch (e) {
       print('Error loading images: $e');
