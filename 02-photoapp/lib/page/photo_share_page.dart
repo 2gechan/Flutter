@@ -94,25 +94,25 @@ class _SharePageState extends State<SharePage> {
                     ),
                   ),
                 ),
-                Container(
-                  decoration: BoxDecoration(
-                    color: Colors.black,
-                    borderRadius: BorderRadius.circular(5),
-                  ),
-                  //삭제 버튼
-                  child: IconButton(
-                    padding: EdgeInsets.zero,
-                    constraints: const BoxConstraints(),
-                    icon:
-                        const Icon(Icons.close, color: Colors.white, size: 15),
-                    onPressed: () {
-                      //버튼을 누르면 해당 이미지가 삭제됨
-                      setState(() {
-                        images.remove(images[index]);
-                      });
-                    },
-                  ),
-                )
+                // Container(
+                //   decoration: BoxDecoration(
+                //     color: Colors.black,
+                //     borderRadius: BorderRadius.circular(5),
+                //   ),
+                //   //삭제 버튼
+                //   child: IconButton(
+                //     padding: EdgeInsets.zero,
+                //     constraints: const BoxConstraints(),
+                //     icon:
+                //         const Icon(Icons.close, color: Colors.white, size: 15),
+                //     onPressed: () {
+                //       //버튼을 누르면 해당 이미지가 삭제됨
+                //       setState(() {
+                //         images.remove(images[index]);
+                //       });
+                //     },
+                //   ),
+                // )
               ],
             );
           },
