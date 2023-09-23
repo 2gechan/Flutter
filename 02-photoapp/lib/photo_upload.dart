@@ -96,12 +96,9 @@
 
 //     File file = File(image.path);
 //     TaskSnapshot task = await storageReference.putFile(file);
-//     // await storageReference.putFile(file);
 
 //     // 업로드된 이미지의 URL 가져오기
 //     String imageUrl = await task.ref.getDownloadURL();
-
-//     // String imageUrl = await storageReference.getDownloadURL();
 
 //     // Firestore에 이미지 정보 저장
 //     await FirebaseFirestore.instance.collection('images').add({
@@ -109,19 +106,13 @@
 //       'image_name': imageName,
 //       'image_extension': imageExtension, // 확장자 정보도 저장
 //       'f_name': widget.folderName, // f_name 값을 원하는 값으로 설정
-//       // 추가 필드도 필요한 경우 여기에 추가
+//       'f_onOff': 0,
 //     });
 
 //     // 이미지가 업로드되면 리스트에 추가
 //     setState(() {
 //       images.add(image);
 //     });
-
-//     Directory tempDir = await getTemporaryDirectory();
-//     File cachedImage = File('${tempDir.path}/$imageName');
-//     if (await cachedImage.exists()) {
-//       await cachedImage.rename(imageName);
-//     }
 //   }
 
 //   @override
@@ -129,7 +120,7 @@
 //     return Scaffold(
 //       drawer: mainDrawer(context),
 //       appBar: AppBar(
-//         title: const Text("추억 보관함"),
+//         title: Text(widget.folderName),
 //       ),
 //       body: Container(
 //         padding: const EdgeInsets.all(10),
@@ -163,7 +154,7 @@
 //                       if (image != null) {
 //                         // String imageExtension = path.extension(image.path);
 //                         // String imageName = getRandomString(10) + imageExtension;
-//                         uploadImageToStorage(image);
+//                         await uploadImageToStorage(image);
 //                       }
 //                     },
 //                     icon: const Icon(
@@ -190,10 +181,12 @@
 //                   child: IconButton(
 //                     onPressed: () async {
 //                       List<XFile?> multiImage = await picker.pickMultiImage();
-//                       setState(() {
-//                         // 갤러리에서 가지고 온 사진들을 images 리스트 변수에 저장
-//                         images.addAll(multiImage);
-//                       });
+
+//                       // String imageExtension = path.extension(image.path);
+//                       // String imageName = getRandomString(10) + imageExtension;
+//                       for (XFile? image in multiImage) {
+//                         await uploadImageToStorage(image!);
+//                       }
 //                     },
 //                     icon: const Icon(
 //                       Icons.add_photo_alternate_outlined,
@@ -279,7 +272,7 @@
 //                             });
 //                           },
 //                         ),
-//                       )
+//                       ),
 //                     ],
 //                   );
 //                 },
@@ -291,6 +284,8 @@
 //     );
 //   }
 // }
+
+// ignore_for_file: depend_on_referenced_packages
 
 import 'dart:io';
 import 'dart:math';
@@ -331,6 +326,31 @@ Reference _ref = _storage.ref("/");
 List<XFile?> images = []; // 가져온 사진들을 보여주기 위한 변수
 
 class ImageUploadState extends State<ImageUpload> {
+  List<XFile?> images = [];
+  List<bool> isOnOff = [];
+
+  // 각 이미지의 f_isOnOff 상태를 저장하는 리스트
+  // List<bool> isOnOff = List.generate(images.length, (index) => false);
+
+  // f_isOnOff 상태 토글 함수
+  void toggleOnOff(int index) {
+    setState(() {
+      isOnOff[index] = !isOnOff[index];
+    });
+
+    // Firestore에서 해당 이미지의 f_isOnOff 값을 업데이트합니다.
+    String imageName = path.basename(images[index]!.path);
+    FirebaseFirestore.instance
+        .collection('images')
+        .where('image_name', isEqualTo: imageName)
+        .get()
+        .then((querySnapshot) {
+      for (var doc in querySnapshot.docs) {
+        doc.reference.update({'f_isOnOff': isOnOff[index]});
+      }
+    });
+  }
+
   // 랜덤한 문자열 생성 함수
   String getRandomString(int length) {
     const chars = 'abcdefghijklmnopqrstuvwxyz0123456789';
@@ -346,6 +366,7 @@ class ImageUploadState extends State<ImageUpload> {
     super.initState();
     // 이미지 리스트를 초기화합니다.
     images.clear();
+    isOnOff.clear();
     // 폴더 이름과 일치하는 사진들을 Firebase Firestore에서 불러옵니다.
     _loadImagesFromFirestore();
   }
@@ -369,6 +390,7 @@ class ImageUploadState extends State<ImageUpload> {
 
         setState(() {
           images.add(XFile(file.path));
+          isOnOff.add(doc['f_isOnOff'] ?? false);
         });
       }
     } catch (e) {
@@ -398,7 +420,7 @@ class ImageUploadState extends State<ImageUpload> {
       'image_name': imageName,
       'image_extension': imageExtension, // 확장자 정보도 저장
       'f_name': widget.folderName, // f_name 값을 원하는 값으로 설정
-      // 추가 필드도 필요한 경우 여기에 추가
+      'f_isOnOff': false,
     });
 
     // 이미지가 업로드되면 리스트에 추가
@@ -412,7 +434,7 @@ class ImageUploadState extends State<ImageUpload> {
     return Scaffold(
       drawer: mainDrawer(context),
       appBar: AppBar(
-        title: const Text("추억 보관함"),
+        title: Text(widget.folderName),
       ),
       body: Container(
         padding: const EdgeInsets.all(10),
@@ -473,10 +495,12 @@ class ImageUploadState extends State<ImageUpload> {
                   child: IconButton(
                     onPressed: () async {
                       List<XFile?> multiImage = await picker.pickMultiImage();
-                      setState(() {
-                        // 갤러리에서 가지고 온 사진들을 images 리스트 변수에 저장
-                        images.addAll(multiImage);
-                      });
+
+                      // String imageExtension = path.extension(image.path);
+                      // String imageName = getRandomString(10) + imageExtension;
+                      for (XFile? image in multiImage) {
+                        await uploadImageToStorage(image!);
+                      }
                     },
                     icon: const Icon(
                       Icons.add_photo_alternate_outlined,
@@ -528,7 +552,9 @@ class ImageUploadState extends State<ImageUpload> {
                           padding: EdgeInsets.zero,
                           constraints: const BoxConstraints(),
                           icon: const Icon(Icons.close,
-                              color: Colors.white, size: 15),
+                              color: Colors.white, size: 18),
+                          // icon: const Icon(Icons.close,
+                          // color: Colors.white, size: 15),
                           onPressed: () async {
                             String imageUrlToDelete = images[index]!.path;
                             debugPrint("이미지경로 : $imageUrlToDelete");
@@ -562,7 +588,26 @@ class ImageUploadState extends State<ImageUpload> {
                             });
                           },
                         ),
-                      )
+                      ),
+                      Container(
+                        margin: const EdgeInsets.fromLTRB(0, 0, 25, 0),
+                        decoration: BoxDecoration(
+                          color: isOnOff[index] ? Colors.blue : Colors.green,
+                          borderRadius: BorderRadius.circular(5),
+                        ),
+                        // 공유하기 버튼
+                        child: IconButton(
+                          padding: EdgeInsets.zero,
+                          constraints: const BoxConstraints(),
+                          icon: const Icon(Icons.share,
+                              color: Colors.white, size: 18),
+                          onPressed: () async {
+                            // 버튼을 클릭하면 f_onOff 컬럼을 0에서 1로 변경하고 Container decoration color를 파란색으로
+                            // 한번더 클릭하면 1에서 0으로 변경하고 Container decoration color를 초록색으로 변경
+                            toggleOnOff(index);
+                          },
+                        ),
+                      ),
                     ],
                   );
                 },

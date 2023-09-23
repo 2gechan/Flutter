@@ -22,8 +22,11 @@ List<XFile?> images = []; // 가져온 사진들을 보여주기 위한 변수
 class _SharePageState extends State<SharePage> {
   Future<void> _loadImagesFromFirestore() async {
     try {
-      QuerySnapshot querySnapshot =
-          await FirebaseFirestore.instance.collection('images').get();
+      QuerySnapshot querySnapshot = await FirebaseFirestore.instance
+          .collection('images')
+          .where('f_isOnOff',
+              isEqualTo: true) // f_isOnOff가 true인 이미지만 가져오도록 필터링
+          .get();
 
       // Firestore에서 가져온 이미지 URL을 images 리스트에 추가합니다.
       for (QueryDocumentSnapshot doc in querySnapshot.docs) {
